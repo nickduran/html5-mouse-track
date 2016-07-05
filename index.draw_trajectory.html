@@ -1,0 +1,90 @@
+<html>
+<head><title>Example Analysis of Computer-Mouse Trajectories</title>
+<link rel=StyleSheet HREF="style.css" TYPE="text/css" MEDIA=screen>
+</head>
+
+<body> 
+
+<center><div id=canvas_div>
+<canvas id="the_canvas" style="border-width:1px;border-style:solid;border-color:black;" 
+	width="300" height="300" onmousedown="set_mouse_down(event);" 
+	onmousemove="draw(event);" onmouseup="set_mouse_up(event);" 
+	onmouseout="set_mouse_up(event);">
+</canvas><br>
+<input id="clearbtn" onclick="clearcv();" type="button" value="clear">
+<p id="infodisplay">
+...
+</p>
+<p id="trajdisplay">
+...
+</p>
+</center></div><br>
+
+<script>
+
+	var mouse_be_down = 0;
+	var drawing = 0;
+	var curX = 0;
+	var curY = 0;
+	var activities = "";
+	var the_canvas=document.getElementById("the_canvas");
+	var the_canvas_context=the_canvas.getContext("2d");
+	the_canvas_context.fillStyle="#fff";
+	the_canvas_context.fillRect(0,0,300,300);		
+	var xs = [];
+	var ys = [];
+	
+	function clearcv() {
+		the_canvas_context.fillStyle="#fff";
+		the_canvas_context.fillRect(0,0,300,300);		
+		trajdisplay.innerHTML = "...";
+		infodisplay.innerHTML = "...";	
+	}
+	
+	function set_mouse_down(ev) {			
+		mouse_be_down = 1;
+		if (!ev) var ev = window.event;
+		the_canvas_context.lineWidth = 1;
+		the_canvas_context.strokeStyle = "#000";		
+		the_canvas_context.fillStyle = "#000";
+		the_canvas_context.beginPath();		
+		the_canvas_context.moveTo(ev.pageX-the_canvas.offsetLeft,ev.pageY-the_canvas.offsetTop);
+		xs = [];
+		ys = [];		
+		xs[0] = ev.pageX-the_canvas.offsetLeft;
+		ys[0] = ev.pageY-the_canvas.offsetTop;
+	}
+	
+	function draw(ev) {
+		if (!ev) var ev = window.event;						
+		if (mouse_be_down == 1) {			
+			drawing = 1;
+			the_canvas_context.lineTo(ev.pageX-the_canvas.offsetLeft,ev.pageY-the_canvas.offsetTop);
+			the_canvas_context.stroke();		
+			xs.push(ev.pageX-the_canvas.offsetLeft);
+			ys.push(ev.pageY-the_canvas.offsetTop);
+		}
+	}
+	
+	function set_mouse_up() {
+		if (xs.length>0) {
+			mouse_be_down = 0;
+			the_canvas_context.closePath();
+			trajdisplay.innerHTML = "";//xs.length;
+			for (i=0;i<=xs.length-1;i++) {
+				trajdisplay.innerHTML = trajdisplay.innerHTML + "<br>" + xs[i] + "," + ys[i];
+			}
+			infodisplay.innerHTML = "Length: " + xs.length + "<br>" + infodisplay.innerHTML;
+			xs = [];
+			ys = [];
+		}
+	}	
+
+</script> 
+
+
+
+</body>
+
+
+</html>

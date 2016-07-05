@@ -1,0 +1,95 @@
+<html>
+<head><title>Example Tracking of Computer-Mouse Trajectories with HTML5/JS</title>
+<link rel=StyleSheet HREF="style.css" TYPE="text/css" MEDIA=screen>
+</head>
+
+<body> 
+
+<center><div id=canvas_div>
+<canvas id="the_canvas" style="border-width:1px;border-style:solid;border-color:black;" 
+	width="300" height="300"
+	onmousemove="track_mouse(event);"
+	onmousedown="track_click(event);">
+</canvas><br>
+
+<input id="start_or_clear_btn" onclick="start_or_clear();" type="button" value="start trajectory">
+
+<p id="infodisplay">...</p>
+<p id="trajdisplay">...</p>
+
+</center></div><br>
+
+<script>
+
+// demo programmed by Rick Dale for fun
+// if you use, cite something of mine to make me feel fancy
+// GitHub: https://github.com/racdale/html5-mouse-track
+// if this code makes you a gazillionaire, 
+// do a guy a favor, and buy me a soda pop.
+
+	var time_to_track = 0; // track whether trial has been initiated
+	var curX = 0; // current x and y positions
+	var curY = 0;
+	var the_canvas=document.getElementById("the_canvas");
+	var the_canvas_context=the_canvas.getContext("2d");
+	the_canvas_context.fillStyle="#fff"; // prep the canvas
+	the_canvas_context.fillRect(0,0,300,300);		
+	var xs = [];
+	var ys = [];
+	
+	function start_or_clear() {
+		if (document.getElementById("start_or_clear_btn").value=='start trajectory') {
+			time_to_track = 1;
+			document.getElementById("start_or_clear_btn").value='clear';
+			the_canvas_context.strokeText('click here',10,40);
+			document.getElementById("start_or_clear_btn").style.display = 'none';
+		} else {
+			trajdisplay.innerHTML = "..."; // shows trajectory as x,y array
+			infodisplay.innerHTML = "..."; // shows trajectory measures (e.g., length, as below)
+			document.getElementById("start_or_clear_btn").value='start trajectory';
+		}
+	}
+		
+	function track_mouse(ev) {
+		if (!ev) var ev = window.event; // IE control
+		if (time_to_track == 1) {			
+			xs.push(ev.pageX-the_canvas.offsetLeft);
+			ys.push(ev.pageY-the_canvas.offsetTop);
+		}
+	}
+
+	function track_click(ev) {
+		if (!ev) var ev = window.event; // IE control
+		// around the location of our sample stimulus text
+		if (Math.abs(ev.pageX-the_canvas.offsetLeft-20)<50 & 
+			Math.abs(ev.pageY-the_canvas.offsetTop-40)<50 &
+			time_to_track==1) {
+			complete_trial();
+			document.getElementById("start_or_clear_btn").style.display = 'inline';
+			time_to_track = 0;
+		}
+	}
+
+	// let's show some details about the trajectory
+	function complete_trial() {
+		if (xs.length>0) {
+			mouse_be_down = 0;
+			the_canvas_context.closePath();
+			trajdisplay.innerHTML = "";
+			for (i=0;i<=xs.length-1;i++) {
+				trajdisplay.innerHTML = trajdisplay.innerHTML + "<br>" + xs[i] + "," + ys[i];
+			}
+			infodisplay.innerHTML = "Length: " + xs.length + "<br>" + infodisplay.innerHTML;
+			xs = [];
+			ys = [];
+		}
+	}	
+
+</script> 
+
+
+
+</body>
+
+
+</html>

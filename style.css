@@ -1,0 +1,44 @@
+#info_div {
+	margin-bottom:10px;	
+}
+body {
+	font-family:helvetica;	 
+	background-color:#ccc;
+}
+#showurl {
+	background-color:#eaf;	
+	padding:15px;
+	color:black;	
+}
+#showlink {
+	color:white;
+}	
+#fontlink {
+	color:white;	
+}
+#canvas_div:hover {
+	cursor:arrow;
+}
+#tools_div {
+	padding:10px;	
+	background-color:white;
+	border-color:black;
+	border-style:solid;
+	boder-width:1px;
+	width:500px;
+}
+#strokecolspan:hover {
+	cursor:hand;
+}
+#makespan {
+	background-color:#eaf;	
+	padding:15px;
+	color:black;
+}
+#makespan:hover {
+	cursor:hand;
+}
+#makespan a {
+	color:black;
+	text-decoration:none;
+}
